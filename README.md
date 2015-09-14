@@ -1,4 +1,4 @@
-[![DeviantTidy](https://i.imgur.com/UWwEHJi.png)](http://www.deviantart.com/deviation/45622809)
+[![DeviantTidy](https://raw.githubusercontent.com/BoffinbraiN/devianttidy/master/images/logotext.png)](http://www.deviantart.com/deviation/45622809)
 
 # DeviantTidy
 
