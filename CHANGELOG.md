@@ -214,6 +214,9 @@
  - Fixed: Sticky nav option is back! Thanks to [divisionhappy](http://divisionhappy.deviantart.com) for pointing out that you can still enable this via the DA Settings page.
 - **V4.7.5** *2015-08-27*
  - Fixed: Style will no longer make dividing lines on the navigation menus white (restore specific selectors for HR tags).
+- **V4.7.6** *2015-09-14*
+ - Fixed: Regression in inlined CSS meant some selectors weren't working (including scrollbars for scrolling comments).
+ - Added: When reading notes, page title will change to the subject line of the selected note.
 
 ## Known Issues
 

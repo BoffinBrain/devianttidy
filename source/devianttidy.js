@@ -228,7 +228,8 @@
 				GM_setValue('version', this.version);
 	
 				var changes = [
-					"Fixed: Scrolling comments are working again."
+					"Fixed: Scrolling comments are working again.",
+					"Added: When reading notes, page title will change to the subject line of the selected note."
 				];
 	
 				devianttidydialog.open('DeviantTidy ' + this.version + ' Installed', [
