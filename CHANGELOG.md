@@ -1,0 +1,228 @@
+# DeviantTidy Version History
+
+- **V1.0** *2006-12-30*
+ - Project deviantSPACE launched with mods to comments, description, mood box and indent guides
+- **V1.1** *2007-01-01*
+ - Renamed project to deviantTIDY and removed right-hand bar from front page
+- **V1.2** *2007-01-01*
+ - Thanks to [dancewiththesky](http://dancewiththesky.deviantart.com) the project is now available as a Firefox extension.
+ - Fully implemented News Page fixed-width hack
+- **V1.3** *2007-01-04*
+ - Removed Subscription link from messages bar (by [solitude12](http://solitude12.deviantart.com))
+ - Brought back horizontal rules
+ - Inserted the deviantTIDY version number in the page footer for easy reference.
+- **V1.32** *2007-01-05*
+ - Removed Subscription link from dAv5 half-breed pages too, and fixed syntax error.
+- **V1.33** *2007-01-12*
+ - Removed Subscription link AGAIN because dA sneakily changed it.
+- **V1.34** *2007-02-07*
+ - Compact deviation toolbar and less distracting Shop link.
+ - Shorter lines in the Friends box, so you can see more friends before scrolling.
+ - Made hidden comments more subtle.
+- **V1.4** *2007-02-26*
+ - Expanded message count (as you wish!) and fixed-width fix for literature deviations.
+- **V1.5** *2007-03-01*
+ - I forgot to implement the literature deviations fix as advertised.
+ - Also in version 1.5 is the **popup mood selector** which will save you space!
+- **V1.51** *2007-03-02*
+ - The News pages have been revamped, so there is nothing for deviantTIDY to fix.
+- **V1.6** *2007-03-02*
+ - Text in textareas are now the same size as comment text.
+ - Made some tweaks to the hover mood-selector.
+ - Made a few more tweaks to the comment boxes.
+- **V1.7** *2007-04-26*
+ - Made lots of space improvements on the Deviation Submission pages.
+ - Smaller comments.
+ - Less prominent and more tightly-packed deviation links.
+ - Smaller deviation details panel.
+- **V1.8** *2007-05-31*
+ - Improved nested comment hover effect and tidied forum threads.
+ - Made new deviantTIDY logo.
+- **V2.0** *2007-07-07*
+ - Thanks to [dancewiththesky](http://dancewiththesky.deviantart.com) once again for extending the functionality of this add-on!  It now automatically updates.
+ - A GreaseMonkey script has been added to enhance the appearance of signatures in comments.
+ - Elimination of Smallthought comments and Limbo pages are in effect.
+- **V2.1** *2007-07-07*
+ - Removed Limbo code, as deviantART rightly decided to remove this feature.
+ - Changed way the indent guides work, formatting of the deviation details box, and horizontal rules (they also appear in comments now).
+ - Removed images from deviation navigation bar.
+ - In scripts, deviantTIDY formats signatures in the Message Centre, and also formats reply dividers in notes.
+ - Added top-of-page comment box as suggested by [halfatoast](http://halfatoast.deviantart.com).
+- **V2.11** *2007-09-30*
+ - deviantART Films interface is much uglier than expected.
+ - Top padding bug fixed, and headings on the left menu have been improved.
+- **V2.12** *2007-09-30*
+ - Reverted some changes to comment boxes.
+ - Added fixes for the News Submit, Help and FAQ pages, and some tidying on the News pages.
+- **V2.2** *2007-09-30*
+ - Improved Popup Mood box shows the mood you have selected after clicking.
+ - More fixes to deviantART Film pages, including full-width descriptions and comments that don't look like speech-bubbles.
+- **V2.3** *2007-12-16*
+ - Old-style gallery pages.
+ - Deviant signatures slightly faded and spaced further from comment text.
+ - Blue visited links faded.
+ - [ipholio](http://ipholio.deviantart.com)'s deviant stats portion added.
+ - Little tweaks to the positioning of elements in the Gallery Editor interface.
+- **V2.4** *2008-03-31*
+ - Added an options page which allows users to enable comment scrolling.
+ - Miscellaneous tweaks to userpage layout.
+- **V2.6** *2008-06-21*
+ - Rewrite of the script; a whole variety of options, and the extension has Firefox 3 support.
+- **V3.0** *2008-09-04*
+ - Rewritten for dAv6.
+ - Includes literature, DD and Deviousness icons.
+- **V3.0.1** *2008-10-01*
+ - Reply box at top - node is moved rather than cloned.
+ - Deviant command-bar no longer flickers on hover when on right - reported by [MrIcekirby](http://mricekirby.deviantart.com).
+ - Scrollable journal previews idea by [DavidJCobb](http://davidjcobb.deviantart.com).
+- **V3.0.3** *2008-11-11*
+ - Fixed deviantART's ID name change.
+ - Option to limit max width of comment boxes.
+ - Rewrote apps menu CSS after change.
+- **V4.0.0** *2009-05-26*
+ - New logo!  New everything!  Completely rewritten all of deviantTIDY CSS and user-style.
+ - Script will announce when CSS is not present.
+ - Uses a gruzer-style modular interface.
+ - Looks for updates by checking the deviation page.
+ - All functionality is based around the options system, which means more customization.
+ - Signature rendering code is between 10 and 100 times faster.
+ - Allows users to extend deviantTIDY with their own user-scripts.
+ - Thanks to [zikes](http://zikes.deviantart.com) for the helpful shorthand DOM functions used throughout.
+- **V4.0.1** *2009-06-07*
+ - 'Comment box at top of page' feature now returns as the Floating Comment Box feature.  Click 'Add Yours' or click the up button on the comment box to make your comment stay visible, wherever you scroll, and click again to dock it.
+ - Can now redirect to your message center when logging in.
+ - Will automatically and silently look for updates every two days.  Minor fixes.
+- **V4.0.2** *2009-07-19*
+ - Minor fixes and removal of some obsolete CSS.
+- **V4.0.3** *2009-10-21*
+ - Consolidated and simplified deviation left toolbar for film submissions to make them look the same as regular deviations.
+ - Fixed new deviation page layout.
+ - Fixed deviation page comment link to utilize new button on toolbar.
+ - Setting for scrolling comments now also affects notes and note previews (idea by [jellystick](http://jellystick.deviantart.com)).  Also applies to Message Center comments.
+ - Dividing lines for notes and comments are now optional.
+ - Replaced the Limit Comment Width feature (too much maintenance) and limited the entire body width instead.
+ - Changes made to the way add-ons are implemented.  dT will call dialog functions in the same way add-ons are expected to.
+ - Script will be hard-coded to know whether it's bundled into Firefox or not, and options button in Firefox Add-ons window gives a helpful message.
+- **V4.0.4** *2010-01-11*
+ - Literature bug discovered by [lucasvn](http://lucasvn.deviantart.com) where literature thumbnail images were hidden under a plain image.
+ - Added option to bring back text labels on the navigation bar.
+ - Option to show your message count in the tab title (on by default).
+ - Changes made to the way deviantTIDY is packaged, so add-ons can gain access to its useful global functions (prefixed by $).
+ - Removed all CSS for v5 comments as they appear to be obsolete.
+- **V4.0.5** *2010-01-30*
+ - Added access key C to toggle floating comment box.
+ - Changed the Options window and popup code to limit and scroll according to the window's height.
+ - Fixed comment signatures not having dividing lines (v5 box CSS removed).
+ - Fixed issue with custom fixed-width journal CSS designs being stretched against their will.
+ - Fixed extra CSS warning boxes being inserted every time the dialog is opened.
+ - Fixed 'strip external redirects' not printing the actual number of links stripped in debug mode.
+- **V4.0.6** *2010-02-15*
+ - Minor fix to stop comments being hidden when moods were hidden, because dA changed some HTML.
+ - Hoping dA will reverse its changes to comments which stop indent guides working.
+- **V4.0.7** *2010-04-18*
+ - Compatibility changes for v7 (work in progress, and some features are obsolete).
+ - Limited maximum height for images and descriptions in devWATCH GIANT preview mode when Stacks are on.
+- **V4.1.0** *2010-06-22*
+ - Moved over to v7 completely.
+ - Rewrote floating comment box.
+ - 'No text labels' feature now works on sticky menu.
+- **V4.1.1** *2010-09-21*
+ - If floating comment box is in focus when dismissed, it will be blurred to free the keyboard.
+ - If a deviation page is dynamically loaded on top of another page, Floating Comment will target the last comment box instead of the one on the original page.
+ - Scroll the list of groups in which a deviation appears when it's greater than 5.
+ - Ensure navigation text is only hidden on expanded menu, not pop-up menus.
+ - Minor code refactoring.
+- **V4.1.2** *2010-12-17*
+ - Minor changes. Added options to hide Muro links until the text area is hovered.
+ - Added option to hide all blue group boxes.
+ - Added keyboard browsing feature, using the left/right arrow keys to change pages when prev/next buttons are available.
+- **V4.2.0** *2011-05-10*
+ - Removed llama and shakefish emoticon replacements (llama no longer exists - user deactivated their account).
+ - Used jQuery to improve many features, including stripping external links.
+ - Fixed keyboard navigation for FF4.
+ - Fixed login redirect feature by remembering the login state and username from the last page load, and added option to go to your profile page.
+ - Improved stripping of external links by using jQuery.live() to scan for all links now and in the future, and added the option to prompt before following links (works for left-click only - middle and right-clicks will not receive prompts).
+ - Refactoring to move some objects and constants out of the deviantTIDY object itself. Breaks backwards compatibility with old add-ons, if any exist (I'm not aware of any!)
+- **V4.2.1** *2011-09-05*
+ - Improvement to dividing signature lines: can now determine with 100% accuracy where signature begins, even if it contains multiple signature-like double-dashes (the real one includes a new-line).
+ - Fixed keyboard navigation for gallery/favourites pages when class names changed.
+ - Discovered that extension is compatible with Firefox 6, so allow installation for 3.5.3 - 6.* (unsure whether 4-5 are compatible, but allow all versions in between anyway).
+- **V4.2.2** *2011-09-23*
+ - Fixed a regression where trying to use the floating comment box in a dynamic page selected the old comment box for the static page.
+ - Minor tweaks to logged out page.
+ - Fix for new "remove this message after I reply" checkbox in Message Center.
+- **V4.2.3** *2011-10-05*
+ - No code changes; just altered the maxVersion in the Firefox addon to support Firefox 8.
+- **V4.3.0** *2011-12-19*
+ - Added feature to make the top bar always appear fixed at the top of the viewport.
+ - Fixed Christmassy 'Buy Print' button to not repeat the background image.
+ - Added compatibility for Firefox 9 and removed compatibility for Firefox 3 due to function.bind being unavailable, and other quirks holding back development.
+ - Script uses strict!
+ - Function $ now means jQuery. All calls to the old $ now use document.getElementById directly. $J deleted.
+- **V4.3.1** *2012-02-10*
+ - Made extension compatible with FF10 (even though it carried on working with a maxVersion of 9.* - WTF?)
+ - Moved option preferences into an options subtree and made them real integers.
+ - More core code strictness.
+- **V4.4.0** *2012-08-19*
+ - Fixed collapsing sidebar on browse pages.
+ - Fixed deprecated -moz-border-radius attributes in CSS.
+ - Re-ordered and changed a few options, dividing them into categories for easier reading.
+ - Added ability to hide social sharing buttons.
+ - Removed code that finds comment signatures because dA does it properly now. 
+ - Added option to change floating comment shortcut key.
+ - Added option to turn on/off keyboard browsing feature.
+- **V4.4.1** *2012-09-11*
+ - Fixed literature thumbs by removing custom lit thumb CSS from deviantTIDY.
+- **V4.5.0** *2013-06-07*
+ - Styles to collapse the 'Buy Print' additional options
+ - New option to remove 'More Like This' hover links on gallery thumbnails.
+ - New option to collapse 'More Like This' section in the deviation sidebar.
+ - Added a layout fix to message center so that the X buttons don't shift when an item is selected.
+ - Removed no-prints feature now that new submit procedure handles this in a less annoying manner.
+ - Updates to use .on() instead of .live() which was removed in jQuery 1.9 (this is what caused dispatch failures)
+ - Debug mode turned off (was accidentally left on in last release)
+- **V4.5.1** *2013-07-18*
+ - Fixed: settings link wasn't available in the page footer.
+- **V4.6.0** *2013-11-08*
+ - Fixed: keyboard navigation triggering in rich text editors when it shouldn't.
+ - Fixed: floating comment box trigger should more reliably focus the text field (it's not perfect yet).
+ - Fixed: floating comment box would appear under deviation images
+ - Added: improved formatting for various parts of the deviation sidebar, including the option to hide thumbnail panels.
+ - Added: comments for better documentation of the CSS.
+ - Added: script will show a 'missing CSS' popup on page load if the CSS is missing or out of date.
+ - Removed: lots of old obsolete styles.
+- **V4.6.0** *2014-10-13*
+ - Changed: script is now hosted on Greasy Fork because UserScripts.org no longer exists.
+ - Changed: CSS is now bundled into the user script, so the Stylish CSS is no longer needed. This runs using *@run-at document-start* so it loads instantly.
+- **V4.6.0** *2014-10-13*
+ - Changed: script is now hosted on Greasy Fork because UserScripts.org no longer exists.
+ - Changed: CSS is now bundled into the user script, so the Stylish CSS is no longer needed. This runs using *@run-at document-start* so it loads instantly.
+- **V4.7.1** *2015-08-19*
+ - Fixed: When previewing a note in the note model dialog on user pages, the preview box no longer pushes the buttons out of view when scrolling comments are enabled.
+- **V4.7.2** *2015-08-19*
+ - Fixed: Message count in page title now works again, in splintered and un-splintered mode.
+ - Changed: Rebranding from deviantART to DeviantArt and deviantTIDY to DeviantTidy, and changed 'messages' to 'notifications' in various places.
+ - Removed: Option for hiding text labels on sticky nav, because sticky nav no longer exists.
+ - Removed: Internal code for missing CSS alert box, because CSS is now included in the script.
+- **V4.7.3** *2015-08-19*
+ - Changed: New logo.
+- **V4.7.4** *2015-08-21*
+ - Added: Option to hide the CORE ad in the header.
+ - Changed: Small tweaks to the new logo.
+ - Changed: Referencing the latest version of jQuery (2.1.4) from CDNJS.
+ - Changed: Tweaks to deviation sidebar CSS.
+ - Fixed: Sticky nav option is back! Thanks to [divisionhappy](http://divisionhappy.deviantart.com) for pointing out that you can still enable this via the DA Settings page.
+- **V4.7.5** *2015-08-27*
+ - Fixed: Style will no longer make dividing lines on the navigation menus white (restore specific selectors for HR tags).
+
+## Known Issues
+
+Currently empty.
+
+## Todo List
+
+ - Rewrite some internal code using jQuery to be more concise.
+
+## Contributing
+
+Please comment on the DeviantTidy page for feature suggestions, or use GitHub to report issues.
