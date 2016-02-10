@@ -217,6 +217,10 @@
 - **V4.7.6** *2015-09-14*
  - Fixed: Regression in inlined CSS meant some selectors weren't working (including scrollbars for scrolling comments).
  - Added: When reading notes, page title will change to the subject line of the selected note.
+- **V4.7.8** *2016-02-10*
+ - Fixed: Updated the way dynamic deviation pages are detected, so keyboard browsing doesn't override deviation skipping.
+ - Fixed: Keyboard navigation should work consistently on Firefox and Chrome.
+ - Added: Reintroduced the feature that keeps the description and comments visible while playing Films.
 
 ## Known Issues
 
@@ -225,6 +229,7 @@ Currently empty.
 ## Todo List
 
  - Rewrite some internal code using jQuery to be more concise.
+ - Next major version of DT will probably remove support for addons because nobody ever used it.
 
 ## Contributing
 
