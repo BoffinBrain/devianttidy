@@ -662,16 +662,18 @@
 				choices: ["No", "Yes", "Prompt"],
 				lazy: true,
 				method: function(pref) {
-					var prefix = 'http://www.deviantart.com/users/outgoing?';
+					var prefix = /https?:\/\/www.deviantart.com\/users\/outgoing\?(.+)/i;
 
 					// Check every link that gets focus and apply rules based on its href.
-					$(devianttidy.body).on('focus', 'a', function(evt) {
+					$(devianttidy.body).on('focus', 'a.external', function(evt) {
 						var link = $(this);
 						var href = link.attr('href');
-						if (href && href.indexOf(prefix) === 0) {
-							var new_href = href.substring(prefix.length);
-							link.attr('href', new_href);
-							link.addClass('dt-external-link');
+						if (href) {
+							var matches = prefix.exec(href);
+							if (matches.length == 2) {
+								link.attr('href', matches[1]);
+								link.addClass('dt-external-link');
+							}
 						}
 					});
 
