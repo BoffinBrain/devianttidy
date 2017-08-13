@@ -4,13 +4,15 @@
 
 [Install the Greasemonkey Script from Greasy Fork](https://greasyfork.org/scripts/5681-devianttidy)
 
+[Go to the DeviantArt submission page](https://boffinbrain.deviantart.com/art/DeviantTidy-45622809)
+
 ## Introduction
 
 DeviantTidy is a set of styles and scripts to improve the layout and usability of DeviantArt.
 
-Ever since DAv5, many users have been unhappy with various aspects of DeviantArt's layout and design.  Some decisions on font size, margins and spacing had clearly been neglected.
+Ever since DAv5, many users have been unhappy with various aspects of DeviantArt's layout and design. Some decisions on font size, margins and spacing had clearly been neglected.
 
-And so DeviantTidy was written, to claim back much of that wasted space!  Inspired by some of Jan Van Lysebettens's CSS mods for Firefox, DeviantTidy was a very lightweight modification to fix comment boxes and various other assets on DA pages, to make things clearer and more streamlined.  Since then, it's expanded to cover lots of other annoyances, big and small, to improve the look and usability of the site. With a JavaScript interface, it's fully customizable too.
+And so DeviantTidy was written, to claim back much of that wasted space! Inspired by some of Jan Van Lysebettens's CSS mods for Firefox, DeviantTidy was a very lightweight modification to fix comment boxes and various other assets on DA pages, to make things clearer and more streamlined. Since then, it's expanded to cover lots of other annoyances, big and small, to improve the look and usability of the site. With a JavaScript interface, it's fully customizable too.
 
 ## Features
 
@@ -35,4 +37,4 @@ In order to use Greasemonkey scripts, you need to install [Greasemonkey](https:/
 When you first install DeviantTidy, a dialog will appear when you visit any DA page to let you know that it was successfully installed. You should also see a *DeviantTidy Options* link under the user menu on the header navigation when you are logged in.
 
 **Can I use DeviantTidy with [insert your favourite skin or script here]?**
-DeviantTidy can be used safely in combination with other custom deviant skins and scripts because it does the very minimum amount of changes required to get the desired effect.  In the rare event of clashes in styles or broken functionality, tell me about the issue, and include info about the other mods you are using.
+DeviantTidy can be used safely in combination with other custom deviant skins and scripts because it does the very minimum amount of changes required to get the desired effect. In the rare event of clashes in styles or broken functionality, tell me about the issue, and include info about the other mods you are using.
