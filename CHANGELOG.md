@@ -221,6 +221,11 @@
  - Fixed: Updated the way dynamic deviation pages are detected, so keyboard browsing doesn't override deviation skipping.
  - Fixed: Keyboard navigation should work consistently on Firefox and Chrome.
  - Added: Reintroduced the feature that keeps the description and comments visible while playing Films.
+- **V4.7.9** *2017-08-13*
+ - Updated: DeviantTidy will look for updates using HTTPS because DA now officially supports it.
+ - Fixed: Options link moved from the page footer to the user menu on the top navigation, so you can access it even when you can't scroll to the bottom of the page.
+ - Fixed: Modal dialogs will resize if the window is resized after they're opened.
+ - Removed: Old code that determined whether the script was running as a Firefox addon was dropped, since the addon has long been deprecated.
 
 ## Known Issues
 

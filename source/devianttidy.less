@@ -1,58 +1,66 @@
-/*
-  DeviantTidy V4.7.7
-  By BoffinbraiN
-  http://boffinbrain.deviantart.com/
+// Common Page Elements
 
-  For detailed support and version information, see
-  http://www.deviantart.com/deviation/45622809/
-
-  Credits:
-  - janvanlysebettens, whose CSS hacks inspired DeviantTidy, and contributed several ideas
-*/
-
-
-
-/* Headers, Footers and Navigation */
-
-.friendmachine .controls {padding-left:5px !important;} /* Layout tweaks to Friends panel */
-.friendmachine > .readout > dl > dd.f {line-height:18px !important;}
-.friendmachine > .readout > dl {margin-bottom:8px !important;}
-
-:not(.oh-eax) > #oh-mainmenu #more7-main.dt-hide-nav-labels > a:hover {min-width:8em !important;}
-:not(.oh-eax) > #oh-mainmenu #more7-main.dt-hide-nav-labels > a:not(:hover) {font-size:0 !important; padding-right:0 !important;}
-:not(.oh-eax) > #oh-mainmenu #more7-main.dt-hide-nav-labels > a:not(:hover) > sup {display:none !important;}
-
-body.dt-hide-core-ad #oh-menu-upgrade {display:none !important;}
-
-#overhead-collect.dt-top-nav-fixed {position:fixed !important; z-index:151 !important;}
-
-
-
-/* Common Page Elements */
+body.dt-limit-width { // Limit the maximum width of deviantART page if option is set
+	margin-left:auto !important; margin-right:auto !important;
+	&.dt-limit-width.l1 {max-width:1200px !important;}
+	&.dt-limit-width.l2 {max-width:1400px !important;}
+	&.dt-limit-width.l3 {max-width:1600px !important;}
+}
 
 #artist-comments hr,
 .previewcontainer hr,
 .thought .body hr,
-#output hr:not([class]) {display:block !important; border:solid 1px transparent !important; border-top-color:#9DB1B0 !important; border-bottom-color:#E9EFE8 !important;}
+#output hr:not([class]),
+.devianttidy-dialog hr {display:block !important; border:solid 1px transparent !important; border-top-color:#9DB1B0 !important; border-bottom-color:#E9EFE8 !important;} // Nicer horizontal rules
 
-textarea {font-size:90% !important; font-family:"verdana", sans-serif;}
 .mc-ctrl,
 .mcb-note-box,
 .mcbox > .ch-ctrl,
-div.mcbox-inner-preview {border-radius:0 !important;}
+div.mcbox-inner-preview {border-radius:0 !important;} // Message center boxes just look better when square
 
-#output div.alink a, #output a.a {text-decoration:none !important;}
-#output div.alink a:hover,
-#output a.a:hover {text-decoration:underline !important;}
-#output a.a:visited {opacity:0.7;}
+#output {
+	div.alink a,
+	a.a {text-decoration:none !important;}
+	div.alink a:hover,
+	a.a:hover {text-decoration:underline !important;}
+	a.a:visited {opacity:0.7;} // Visited links need to look different from regular links
+}
 
-body > div.drag-and-collect {display:none !important;} /* Drag and Collect tooltip over thumbs */
+body > div.drag-and-collect {display:none !important;} // Drag and Collect tooltip over thumbs
 
-.smbutton-blue:focus {outline:dotted 1px black !important;} /* Restore accessibility on buttons */
+.smbutton-blue:focus {outline:dotted 1px black !important;} // Restore accessibility on buttons
 
 
 
-/* Expand fixed-width items and comments */
+// Header and Navigation
+
+#overhead-collect.dt-top-nav-fixed {position:fixed !important; z-index:151 !important;} // Fix the main header to the top of the viewport
+
+:not(.oh-eax) > #oh-mainmenu #more7-main.dt-hide-nav-labels { // Hide labels on the sticky nav until hovered
+	> a:hover {min-width:8em !important;}
+	> a:not(:hover) {font-size:0 !important; padding-right:0 !important;}
+	> a:not(:hover) > sup {display:none !important;}
+}
+
+body.dt-hide-core-ad #oh-menu-upgrade {display:none !important;} // Hide the 'Update to CORE' add in header
+
+.friendmachine { // Layout tweaks to Friends panel
+	.controls {padding-left:5px !important;}
+	.friendmachine > .readout > dl > dd.f {line-height:18px !important;}
+	.friendmachine > .readout > dl {margin-bottom:8px !important;}
+}
+
+
+
+// Form Fields
+
+textarea {font-size:12px !important; font-family:'verdana', sans-serif;} // Fix some textareas that are left with monospace font
+
+select {border: solid 1px #ccc;} // DA overrides background + color on these, so we must specify border too otherwise they look terrible in Firefox
+
+
+
+// Expand fixed-width items and comments
 
 .bubbleview > div.policy-page,
 p.critique-recommendation,
@@ -60,133 +68,147 @@ p.critique-recommendation,
 
 
 
-/* Limit the maximum width of deviantART page if option is set */
+// Friends List
 
-body.dt-limit-width {margin-left:auto !important; margin-right:auto !important;}
-body.dt-limit-width.l1 {max-width:1200px !important;}
-body.dt-limit-width.l2 {max-width:1400px !important;}
-body.dt-limit-width.l3 {max-width:1600px !important;}
-
-
-
-/* Friends List */
-
-table.zebra, table.zebra tr, table.zebra tr > * {border-collapse:collapse !important;}
-#deviantlist td {padding:0 3px !important;}
-#deviantlist tr.even:hover td,
-#deviantlist tbody tr:hover td {background:#DEE8E5;}
+table.zebra,
+table.zebra tr,
+table.zebra tr > * {border-collapse:collapse !important;}
+#deviantlist {
+	td {padding:0 3px !important;}
+	tr.even:hover td,
+	tbody tr:hover td {background:#DEE8E5;}
+}
 
 #tblGroups td.c input,
 #tblGroups + form td.c input {width:80px !important;}
 
 
 
-/* Comments */
+// Comments
 
-.dt-floating-comment {border:1px solid rgba(255,255,255,0.5); background:rgba(211,223,209,0.8); z-index:101 !important; display:block !important; position:fixed !important; bottom:0 !important; left:0; right:0; padding:15px 20px 0 !important;}
-.dev-view-about {z-index:101 !important;} /* Ancestor container must have z-index or the deviation image goes over the comment box */
-
-body .cc-avatar {margin-top:1px !important;} /* Vertical tweak for comment avatars */
+body .cc-avatar {margin-top:1px !important;} // Vertical tweak for comment avatars
 
 .ccomment {margin-bottom:8px !important;}
 
 .cc-signature {float:none !important; font-size:90%; overflow-y:auto !important; max-height:15em !important; padding-bottom:1px !important;}
 
-body.dt-scroll-comments    .ctext .text-ii {overflow-y:auto !important; padding-bottom:1px;} /* Scrollbars on comments */
-body.dt-scroll-comments.s1 .ctext .text-ii {max-height:17em !important;}
-body.dt-scroll-comments.s2 .ctext .text-ii {max-height:34em !important;}
+body.dt-scroll-comments { // Scrollbars on comments
+	.ctext .text-ii {overflow-y:auto !important; padding-bottom:1px;}
+	&.s1 .ctext .text-ii {max-height:17em !important;}
+	&.s2 .ctext .text-ii {max-height:34em !important;}
+}
+
+.dt-floating-comment {border:1px solid rgba(255,255,255,0.5); background:rgba(211,223,209,0.8); z-index:101 !important; display:block !important; position:fixed !important; bottom:0 !important; left:0; right:0; padding:15px 20px 0 !important;} // Floating comment box
+.dev-view-about {z-index:101 !important;} // Ancestor container must have z-index or the deviation image goes over the floating comment box
 
 
 
-/* Simple Reply Boxes */
+// Simple Reply Boxes
 
-div.talk-post textarea,
-div.talk-post div.pager-holder,
-div.talk-post div.pager2 {height:150px !important;}
-
-
-
-/* Indent Guides */
-
-.talk-tower div.nest {padding-left:12px !important; margin-bottom:8px !important; border-left:solid 1px transparent !important;}
-.talk-tower div.nest:hover {border-color:#a6b2a6 !important;}
+div.talk-post {
+	textarea,
+	div.pager-holder,
+	div.pager2 {height:150px}
+}
 
 
 
-/* Profile Pages */
+// Indent Guides
 
-#deviant ul.list[style^="border-top"] {border:none !important; margin-top:0 !important; padding-top:0 !important;}
+.talk-tower div.nest {
+	padding-left:12px !important; margin-bottom:8px !important; border-left:solid 1px transparent !important;
+	&:hover {border-color:#a6b2a6 !important;}
+}
 
 
 
-/* Group Pages */
+// Profile Pages
 
-body.dt-hide-group-box #gruze-main #gmi-GroupMemberZone {display:none !important;}
+#deviant ul.list[style^='border-top'] {border:none !important; margin-top:0 !important; padding-top:0 !important;}
+
+
+
+// Group Pages
+
+body.dt-hide-group-box #gruze-main #gmi-GroupMemberZone {display:none !important;} // Hide the blue 'Contribute' box on group pages
+
 #any-joinrequest-module > .gr-configform {padding-left:0 !important;}
 .submit_to_groups .second_option > textarea {margin-left:0 !important;}
 
 
 
-/* Group Admin Pages */
+// Group Admin Pages
 
 #gmi-GMRoleEditor #gmi-BPPDropDown > div[style] {padding-left:30px !important;}
 
 
 
-/* Browse, Gallery Pages and Thumbnail Streams */
+// Browse, Gallery Pages and Thumbnail Streams
 
-body.dt-hide-morelikethis .mlt-link {display:none !important;} /* Optional: hide More Like This overlay */
+body.dt-hide-morelikethis .mlt-link {display:none !important;} // Optional: hide More Like This overlay
 
-.frame-button.submit {display:none !important;} /* Hide the Submit button in your own gallery */
-
-
-
-/* Optional: Collapse Sidebar on galleries browse pages and messages */
-
-body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover) {width:15px !important;}
-body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover)>* {display:none !important;}
-
-body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover) {max-width:15px !important;}
-body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover) > * {display:none !important;}
-
-body.dt-collapse-sidebar td + .gruze-sidebar:not(:hover) {width:15px !important;}
-body.dt-collapse-sidebar td + .gruze-sidebar:not(:hover) > * {display:none !important;}
+.frame-button.submit {display:none !important;} // Hide the Submit button in your own gallery
 
 
 
-/* Edit Gallery Popup */
+// Optional: Collapse Sidebar on galleries browse pages and messages
 
-body.editmode #modalspace>.modal {width:700px !important; margin-left:-350px !important;}
-body.editmode #modalspace>.modal>form,
-body.editmode #modalspace>.modal #dnd_deck_container,
-body.editmode #modalspace>.modal #dnd_deck_picker {width:auto !important;}
-body.editmode #modalspace>.modal input[type="text"] {width:100% !important;}
-body.editmode #modalspace>.modal textarea.css,
-body.editmode #modalspace>.modal textarea.text {height:250px !important;}
-
-
-
-/* Literature and Blog Thumbnails */
-
-span.shadow > a.lit,
-span.shadow > span.blogthumb > div {font-size:86% !important; font-family:arial, sans-serif !important;}
-span.shadow > a.lit > q > strong {display:none !important;}
-
-
-
-/* Journal Pages */
-
-.gr-shoutbox div.pp > dl.shouts dt,
-.gr-shoutbox div.pp > dl.shouts dd {padding-left:20px !important;}
-.gr-shoutbox dl.shouts .timestamp {font-size:80% !important; opacity:0.7 !important;}
-.gr-shoutbox div.h.p {width:auto !important; padding-right:85px !important; position:relative !important;}
-.gr-shoutbox div.h.p dt {display:none !important;}
-.gr-shoutbox dl.shouts input[type="text"] {width:100% !important;}
-.gr-shoutbox dl.shouts input[type="submit"] {position:absolute !important; right:6px !important; width:55px !important; top:5px !important;}
+body.dt-collapse-sidebar {
+	#deviant td.gruze-sidebar:not(:hover) {
+		width:15px !important;
+		> * {display:none !important;}
+	}
+	#browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover) {
+		max-width:15px !important;
+		> * {display:none !important;}
+	}
+	td + .gruze-sidebar:not(:hover) {
+		width:15px !important;
+		> * {display:none !important;}
+	}
+}
 
 
 
-/* Deviation Pages */
+// Edit Gallery Popup
+
+body.editmode #modalspace > .modal {
+	width:700px !important; margin-left:-350px !important;
+	> form,
+	#dnd_deck_container,
+	#dnd_deck_picker {width:auto !important;}
+	input[type=text] {width:100% !important;}
+	textarea.css,
+	textarea.text {height:250px !important;}
+}
+
+
+
+// Literature and Blog Thumbnails
+
+span.shadow {
+	> a.lit,
+	> span.blogthumb > div {font-size:86% !important; font-family:arial, sans-serif !important;}
+	> a.lit > q > strong {display:none !important;}
+}
+
+
+
+// Journal Pages
+
+.gr-shoutbox {
+	div.pp > dl.shouts dt,
+	div.pp > dl.shouts dd {padding-left:20px !important;}
+	div.h.p {width:auto !important; padding-right:85px !important; position:relative !important;}
+	div.h.p dt {display:none !important;}
+	dl.shouts .timestamp {font-size:80% !important; opacity:0.7 !important;}
+	dl.shouts input[type=text] {width:100% !important;}
+	dl.shouts input[type=submit] {position:absolute !important; right:6px !important; width:55px !important; top:5px !important;}
+}
+
+
+
+// Deviation Pages
 
 .dd-heading {margin:0 !important;}
 
@@ -195,103 +217,122 @@ div.critique_feedback {width:auto !important; margin-right:135px !important;}
 
 
 
-/* Deviation Sidebar */
+// Deviation Sidebar
 
-body.dt-hide-share-buttons #gmi-ResourceViewShare {display:none !important;} /* Hide social share buttons */
+body.dt-hide-share-buttons #gmi-ResourceViewShare {display:none !important;} // Hide social share buttons
 
-.ile_edit_in_muroimport {margin-top:0 !important;} /* Hide 'Stash apps' title above Muro button */
-.ile_edit_in_muroimport > span.button-title {display:none !important;}
+.ile_edit_in_muroimport { // Hide 'Stash apps' title above Muro button
+	margin-top:0 !important; 
+	> span.button-title {display:none !important;}
+}
 
-body.dt-hide-sidebar-thumbs .deviation-mlt-preview .stream {display:none !important;} /* Hide thumbs on sidebar */
-body.dt-hide-sidebar-thumbs h3 > span.tiny-avatar {display:none !important;} /* Hide sidebar heading icons */
-body.dt-hide-sidebar-thumbs h3.more-from-da-title,
-body.dt-hide-sidebar-thumbs h3.group_featured_title {background:none !important; padding-left:0 !important;}
+body.dt-hide-sidebar-thumbs { // Hide thumbnails on sidebar
+	.deviation-mlt-preview .stream {display:none !important;}
+	h3 > span.tiny-avatar {display:none !important;} // Hide sidebar heading icons
+	h3.more-from-da-title,
+	h3.group_featured_title {background:none !important; padding-left:0 !important;}
+}
 
-.dev-meta-producttabs > #printtabscontainer:not(:hover) #print-button {border-radius:5px !important; border-bottom:solid 1px #9ead98;} /* Collapse Buy Print extras until hovered */
-.dev-meta-producttabs > #printtabscontainer:not(:hover) > #buy-tabs {display:none !important;}
+.dev-meta-producttabs > #printtabscontainer:not(:hover) { // Collapse Buy Print extras until hovered
+	#print-button {border-radius:5px !important; border-bottom:solid 1px #9ead98;}
+	> #buy-tabs {display:none !important;}
+}
 
-.print-submit-help-bubble {display:none !important;}
+.print-submit-help-bubble {display:none !important;} // Hide 'Your deviation is large enough to be a print!' info box
 
-#pointsdownload_widget:not(:hover) > .pdw_details {display:none !important;} /* Collapse Premium Content panel until hovered */
-#pointsdownload_widget:not(:hover) #pdw_button_download {border-radius:5px !important;}
+#pointsdownload_widget:not(:hover) { // Collapse Premium Content panel until hovered
+	> .pdw_details {display:none !important;}
+	#pdw_button_download {border-radius:5px !important;}
+}
 
-div.group_featured_list {position:relative !important; padding:0 !important; padding-top:32px !important; min-height:35px; max-height:285px; overflow-y:auto; overflow-x:hidden;} /* Scrolling groups box in sidebar */
+div.group_featured_list {position:relative !important; padding:0 !important; padding-top:32px !important; min-height:35px; max-height:285px; overflow-y:auto; overflow-x:hidden;} // Scrolling groups box in sidebar
 .not-in-group {text-align:center; margin-top:1em;}
 .submit_to_groups_button {display:inline !important;}
 .submit_to_groups_link {margin:0 !important;}
-#groups_links {position:absolute !important; top:0 !important; padding:0 !important;} /* Add to group button - move to top */
+#groups_links {position:absolute !important; top:0 !important; padding:0 !important;} // Add to group button - move to top
 #all_groups {float:right !important; padding:4px 0 0 1em !important;}
 
-.dev-metainfo-copy-control {clear:both; margin-top:0 !important;}
-.dev-metainfo-copy-control br {display:none !important;} /* Link, thumb & embed inputs on same line as label */
-.dev-metainfo-copy-control strong {display:inline-block; min-width:96px;}
+.dev-metainfo-copy-control { // Link, thumb & embed inputs on same line as label
+	clear:both; margin-top:0 !important;
+	br {display:none !important;}
+	strong {display:inline-block; min-width:96px;}
+}
 
 
 
-/* Film Deviations */
+// Film Deviations
 
-.dev-view-about-content {display:block !important; opacity:1 !important;} /* Never hide details panel when playing */
-
-
-
-/* Forum Threads */
-
-body.dt-hide-forum-icons #thread #reply form table table,
-body.dt-hide-forum-icons #thread .forum img:not([src*="/lock."]):not([src*="/sticky."]),
-body.dt-hide-forum-icons .mcbox-preview-forum .mcb-icon > img {display:none;}
-
-#thread .forum br {display:none;}
-#thread .forum span[title],
-#thread .forum .d-started-by a[title] {margin-left:10px; opacity:0.5;}
-#thread .forum .d-latest-reply,
-#thread .forum .d-started-by {white-space:nowrap;}
-#thread .forum tr.thread td {padding-top:3px !important; padding-bottom:3px !important;}
+.dev-view-about-content {display:block !important; opacity:1 !important;} // Never hide details panel when playing
 
 
 
-/* Help and FAQ */
+// Forum Threads
 
-div[style*="rgb(222, 233, 229)"],
+body.dt-hide-forum-icons { // Hide forum thread icons (except for locked/sticky)
+	#thread #reply form table table,
+	#thread .forum img:not([src*='/lock.']):not([src*='/sticky.']),
+	.mcbox-preview-forum .mcb-icon > img {display:none;}
+}
+
+#thread .forum {
+	br {display:none;}
+	span[title],
+	.d-started-by a[title] {margin-left:10px; opacity:0.5;}
+	.d-latest-reply,
+	.d-started-by {white-space:nowrap;}
+	tr.thread td {padding-top:3px !important; padding-bottom:3px !important;}
+}
+
+
+
+// Help and FAQ
+
+div[style*='rgb(222, 233, 229)'],
 #help-container .mglist {background:none !important; padding:0 0 8px !important;}
 .mglist li {padding-bottom:0 !important;}
 
 
 
-/* Messages - General */
+// Messages - General
 
-#messages h2.mczone-title {margin-right:0 !important;}
-#messages .mczone {border-bottom:none !important;}
-
-#messages .messages-menu div.header img {display:none !important;}
-#messages .messages-folder-zone a.maybedrop {background-position:0 -450px !important;}
-#messages .no-folder-notice {font-size:90% !important;}
+#messages {
+	h2.mczone-title {margin-right:0 !important;}
+	.mczone {border-bottom:none !important;}
+	
+	.messages-menu div.header img {display:none !important;}
+	.messages-folder-zone a.maybedrop {background-position:0 -450px !important;}
+	.no-folder-notice {font-size:90% !important;}
+	
+	.mczone-empty,
+	.talkmessage div.h + a.h,
+	.talkmessage a.h + img {display:none !important;}
+}
 
 .talkmessage td,
 .talkmessage table {width:100% !important;}
-.talkmessage>table > * > * >td:first-child {width:0 !important;}
-
-#messages .mczone-empty,
-#messages .talkmessage div.h + a.h,
-#messages .talkmessage a.h + img {display:none !important;}
+.talkmessage > table > * > * > td:first-child {width:0 !important;}
 
 div.message-simulator {padding:0 !important;}
 
-div.mcbox-inner-full-comment div.mcb-whoicon {top:0 !important;} /* Fix user icons appearing too low in comment boxes. */
+div.mcbox-inner-full-comment div.mcb-whoicon {top:0 !important;} // Fix user icons appearing too low in comment boxes.
 
-div.mcbox-sel > div > span.mcx {top:4px !important; right:4px !important;} /* Fix selected msg items' X buttons shifting when selected.*/
+div.mcbox-sel > div > span.mcx {top:4px !important; right:4px !important;} // Fix selected msg items' X buttons shifting when selected.
 div.mcbox-sel > div > span.mcdx {top:4px !important; right:22px !important;}
 div.mcbox-sel-thumb > div > span.mcx,
 div.mcbox-sel-thumb > div > span.mcdx {margin-right:-2px !important;}
 
 
 
-/* Messages - Comments */
+// Messages - Comments
 
 .talkmessage .mcb-body {width:auto !important;}
 .talkmessage-taller {min-height:102px !important;}
-body.dt-scroll-comments    .talkmessage .mcb-body {overflow-y:auto !important;}
-body.dt-scroll-comments.s1 .talkmessage .mcb-body {max-height:10em !important;}
-body.dt-scroll-comments.s2 .talkmessage .mcb-body {max-height:20em !important;}
+
+body.dt-scroll-comments { // Scrolling comments
+	.talkmessage .mcb-body {overflow-y:auto !important;}
+	&.s1 .talkmessage .mcb-body {max-height:10em !important;}
+	&.s2 .talkmessage .mcb-body {max-height:20em !important;}
+}
 
 .mcbox-leech {margin-top:-4px !important; margin-left:0 !important; border-left:none !important;}
 .mcbox-leech.mcbox-sel {margin-left:-1px !important;}
@@ -305,7 +346,7 @@ body.dt-scroll-comments.s2 .talkmessage .mcb-body {max-height:20em !important;}
 
 
 
-/* Messages - Deviations */
+// Messages - Deviations
 
 #messages .mcb-tab {margin-top:25px !important}
 #deviantART-v7 #messages .mcb-tab > a {padding:0 !important}
@@ -313,47 +354,52 @@ body.dt-scroll-comments.s2 .talkmessage .mcb-body {max-height:20em !important;}
 
 
 
-/* Notes */
+// Notes
 
-#notes .left-column {width:40% !important;}
-#notes .right-column {width:59% !important;}
-#notes li {padding-top:3px !important; padding-bottom:3px !important;}
+#notes {
+	.left-column {width:40% !important;}
+	.right-column {width:59% !important;}
+	li {padding-top:3px !important; padding-bottom:3px !important;}
+}
 
-body.dt-scroll-comments    #notes:not(.note-modal) .previewcontainer {height:auto !important;}
-body.dt-scroll-comments.s1 #notes:not(.note-modal) .previewcontainer {max-height:20em !important;}
-body.dt-scroll-comments.s2 #notes:not(.note-modal) .previewcontainer {max-height:40em !important;}
-
-#notes input.text.f[type="text"][id][maxlength] {padding:2px !important}
-
-
-
-/* Logged Out */
-
-#solid-gone .altview + .sleekadbubble,
-#solid-gone .sleekadbubble + .altview,
-#solid-gone > img[src*="fella"],
-#solid-gone > img[src*="fella"] + div {display:none;}
-#solid-gone div.altview {margin-left:auto !important; margin-right:auto !important;}
-#solid-gone input[style="width: 120px"] {width:180px !important;}
+body.dt-scroll-comments { // Scrolling note previews
+	#notes:not(.note-modal) .previewcontainer {height:auto !important;}
+	&.s1 #notes:not(.note-modal) .previewcontainer {max-height:20em !important;}
+	&.s2 #notes:not(.note-modal) .previewcontainer {max-height:40em !important;}
+}
 
 
 
-/* DeviantTidy Dialogs */
+// Logged Out
 
-.devianttidy-dialog {display:block !important; position:fixed !important; top:0; left:0; bottom:0; right:0; background:rgba(0,0,0,0.5); z-index:200 !important; padding:2em;}
-.devianttidy-dialog > div {position:absolute; left:50%; top:50%; margin-left:-30em !important; width:60em;}
-.devianttidy-dialog a {color:#3B5A4A !important;}
-.devianttidy-dialog .dialog-icon {padding-right:0.3em;}
-.devianttidy-dialog .dialog-close {position:absolute; top:8px; right:6px; cursor:pointer; padding:4px;}
-.devianttidy-dialog .dialog-body {margin:8px !important; overflow-y:auto;}
-.devianttidy-dialog .dialog-category {margin-top:0.5em; font-weight:bold;}
-.devianttidy-dialog .dialog-control {position:relative; margin-left:26px;}
-.devianttidy-dialog .dialog-control input {position:absolute; left:-18px; margin-top:0px;}
-.devianttidy-dialog .dialog-control select {position:absolute; right:0; margin-top:-4px; border:solid 1px #ccc;}
-.devianttidy-dialog .hint {font-size:90%; color:#676;}
-.devianttidy-dialog .dialog-buttons {margin-top:1em;}
-.devianttidy-dialog .dialog-buttons button {min-width:8em; margin:0 0.2em;}
+#solid-gone { // Hide fella and just show login form
+	.altview + .sleekadbubble,
+	.sleekadbubble + .altview,
+	> img[src*='fella'],
+	> img[src*='fella'] + div {display:none;}
+	div.altview {margin-left:auto !important; margin-right:auto !important;}
+	input[style='width: 120px'] {width:180px !important;}
+	#forgot-container {margin-left:0; width:auto;}
+}
 
 
 
-/* Enjoy! */
+// DeviantTidy Dialogs
+
+.devianttidy-dialog {
+	display:block !important; position:fixed !important; top:0; left:0; bottom:0; right:0; background:rgba(0,0,0,0.5); z-index:200 !important; padding:2em;
+	> div {position:absolute; left:50%; top:50%; margin-left:-30em !important; width:60em;}
+	a {color:#3B5A4A !important;}
+	.dialog-icon {padding-right:0.3em;}
+	.dialog-close {position:absolute; top:2px; right:6px; cursor:pointer; padding:4px;}
+	.dialog-close > img {margin:0;}
+	.dialog-body {margin:8px !important; overflow-y:auto;}
+	.dialog-category {margin-top:0.5em; font-weight:bold;}
+	.dialog-control {position:relative; margin-left:26px;}
+	.dialog-control input {position:absolute; left:-18px; margin-top:0px;}
+	.dialog-control select {position:absolute; right:0; margin-top:-4px; border:solid 1px #ccc;}
+	.hint {font-size:90%; color:#676;}
+	.dialog-buttons {margin-top:1em;}
+	.dialog-buttons button {margin:0 0.3em;}
+}
+

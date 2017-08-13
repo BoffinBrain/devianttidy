@@ -2,7 +2,7 @@
 // @name         DeviantTidy
 // @namespace    devianttidy
 // @description  Performs a variety of functions on DeviantArt pages to improve its look and usability. For full details, see http://www.deviantart.com/deviation/45622809/
-// @version      4.7.8
+// @version      4.7.9
 // @icon         data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABABAMAAABYR2ztAAAABGdBTUEAALGPC/xhBQAAAAFzUkdCAK7OHOkAAAAYUExURQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAFY3HCoAAAAHdFJOUwCZo3dSLcKUGtMdAAABDElEQVRIx82UPQvCQBBELyanrQmIrUbFNmhhKyLYBkVsrUzrt3/fI6PJKS6DFxBfu8Pdy2YSpT7RuOXslcQCgY4YyBBIpbmP+UE8gCpMEEjEAOY3RRRO7gptoqCZgof5WQxsENgyhSlRuIoH1CorDKsq1BG4uCuwtgWYH90VKhc+YIWnCo/CN1nh0y8LH+yeZEXhV2OQWmYlpvCjOKdrL6fEvPRumDOwzQqMgo9AlFhmJUZhiQOi1PoUXxUQ6NnLKbgyhTNT2DKF6ZtCmyjoDwoe1hjnCnr+hrlBr4H6Ox4NEecaT9aT/79YTksMYP2R+GN5rl9WwA19ptB0VwiJQsAUvJAozH6lkLgo3AEb5uB/u0ZRNAAAAABJRU5ErkJggg==
 // @require      https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js
 // @match        *://*.deviantart.com/*
@@ -10,7 +10,6 @@
 // @grant        GM_addStyle
 // @grant        GM_getValue
 // @grant        GM_setValue
-// @grant        GM_deleteValue
 // @grant        GM_registerMenuCommand
 // @grant        GM_xmlhttpRequest
 // @grant        unsafeWindow
@@ -85,9 +84,10 @@
 	// The DeviantTidy-specific modal interface
 	var devianttidydialog = {
 		node: null,
+		body: null,
 		timer: null,
 
-		open: function(header, body, autoClose) {
+		open: function(header, content, autoClose) {
 			// Reset timer and set a new one if requested.
 			clearTimeout(this.timer);
 			if (autoClose) {
@@ -98,19 +98,19 @@
 			this.close();
 
 			if (typeof header !== 'string') {return;}
-			if (typeof body === 'string') {
-				body = [$E('div', {className: 'ppp c'}, [body])];
+			if (typeof content === 'string') {
+				content = [$E('div', {className: 'ppp c'}, [content])];
 			}
 
-			body = $E('div', {className: 'ppp dialog-body'}, body);
-			var node = this.createPopup(header, body);
-			devianttidy.body.appendChild(node);
-			this.resizePopup(node, body);
-			this.node = node;
+			this.body = $E('div', {className: 'ppp dialog-body'}, content);
+			this.node = this.createPopup(header);
+			devianttidy.body.appendChild(this.node);
+			this.resizePopup();
+			window.addEventListener('resize', this.resizePopup.bind(this));
 			$('#devianttidy-dialog-close').focus();
 		},
 
-		createPopup: function(header, body) {
+		createPopup: function(header) {
 			return $E('div', {className:'devianttidy-dialog', style:{display:'none'}}, [
 				$E('div', [
 					$E('div', {className:'gr-box gr-genericbox'}, [
@@ -126,12 +126,12 @@
 									]),
 									header
 								]),
-								$E('img', {className:'dialog-close', id:'devianttidy-dialog-close', src:devianttidyicons.close, events:{
-									'click':this.close.bind(this) // TODO need to wrap image in a link to allow focus
-								}})
+								$E('a', {className: 'dialog-close', id: 'devianttidy-dialog-close', href: '#', events: {click: this.close.bind(this)}}, [
+									$E('img', {src: devianttidyicons.close})
+								])
 							])
 						]),
-						$E('div', {className:'gr-body'}, [body]),
+						$E('div', {className:'gr-body'}, [this.body]),
 						$E('i', {className:'gr3 gb'}),
 						$E('i', {className:'gr2 gb'}),
 						$E('i', {className:'gr1 gb gb1'})
@@ -140,17 +140,17 @@
 			]);
 		},
 
-		resizePopup: function(node, body) {
+		resizePopup: function() {
 			var maxPanelHeight = 900;
 			var minWindowHeight = 250;
 
 			// Set maximum body height given window height
 			var ih = window.innerHeight;
 			var h = ih && ih > minWindowHeight ? (ih < maxPanelHeight ? ih : maxPanelHeight) : minWindowHeight;
-			body.style.maxHeight = (h * 0.9 - 60) + 'px';
+			this.body.style.maxHeight = (h * 0.9 - 60) + 'px';
 
 			// Set vertical alignment, given popup height
-			var gr = node.childNodes[0];
+			var gr = this.node.childNodes[0];
 			gr.style.marginTop = (gr.offsetHeight ? -gr.offsetHeight / 2 : -minWindowHeight) + 'px';
 		},
 
@@ -172,6 +172,15 @@
 		up: 'data:image/gif;base64,R0lGODlhDwAPAJEAAP///9vg2kdSS////yH5BAEHAAMALAAAAAAPAA8AAAIknC2Zx6O/GJxnWgQDnQFoq3QiKIyj5YUAyTps9EYu2dANpjQFADs='
 	};
 
+	// Quickly generate buttons using DA's button theme
+	var makeButton = function(label, primary, clickEvent) {
+		return $E('button', {className: primary ? 'smbutton smbutton-green' : 'smbutton', events: {click: clickEvent}}, [
+			$E('span', [label])
+		]);
+	};
+
+	// Compiled, minified CSS from devianttidy.less
+	var devianttidycss = "body.dt-limit-width{margin-left:auto!important;margin-right:auto!important}body.dt-limit-width.dt-limit-width.l1{max-width:1200px!important}body.dt-limit-width.dt-limit-width.l2{max-width:1400px!important}body.dt-limit-width.dt-limit-width.l3{max-width:1600px!important}#artist-comments hr,#output hr:not([class]),.devianttidy-dialog hr,.previewcontainer hr,.thought .body hr{display:block!important;border:1px solid transparent!important;border-top-color:#9DB1B0!important;border-bottom-color:#E9EFE8!important}.mc-ctrl,.mcb-note-box,.mcbox>.ch-ctrl,div.mcbox-inner-preview{border-radius:0!important}#output a.a,#output div.alink a{text-decoration:none!important}#output a.a:hover,#output div.alink a:hover{text-decoration:underline!important}#output a.a:visited{opacity:.7}body>div.drag-and-collect{display:none!important}.smbutton-blue:focus{outline:#000 dotted 1px!important}#overhead-collect.dt-top-nav-fixed{position:fixed!important;z-index:151!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:hover{min-width:8em!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:not(:hover){font-size:0!important;padding-right:0!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:not(:hover)>sup{display:none!important}body.dt-hide-core-ad #oh-menu-upgrade{display:none!important}.friendmachine .controls{padding-left:5px!important}.friendmachine .friendmachine>.readout>dl>dd.f{line-height:18px!important}.friendmachine .friendmachine>.readout>dl{margin-bottom:8px!important}textarea{font-size:12px!important;font-family:verdana,sans-serif}select{border:1px solid #ccc}.bubbleview>div.policy-page,.text.text-ii,p.critique-recommendation{width:auto!important;max-width:100%!important}table.zebra,table.zebra tr,table.zebra tr>*{border-collapse:collapse!important}#deviantlist td{padding:0 3px!important}#deviantlist tbody tr:hover td,#deviantlist tr.even:hover td{background:#DEE8E5}#tblGroups td.c input,#tblGroups+form td.c input{width:80px!important}body .cc-avatar{margin-top:1px!important}.ccomment{margin-bottom:8px!important}.cc-signature{float:none!important;font-size:90%;overflow-y:auto!important;max-height:15em!important;padding-bottom:1px!important}body.dt-scroll-comments .ctext .text-ii{overflow-y:auto!important;padding-bottom:1px}body.dt-scroll-comments.s1 .ctext .text-ii{max-height:17em!important}body.dt-scroll-comments.s2 .ctext .text-ii{max-height:34em!important}.dt-floating-comment{border:1px solid rgba(255,255,255,.5);background:rgba(211,223,209,.8);z-index:101!important;display:block!important;position:fixed!important;bottom:0!important;left:0;right:0;padding:15px 20px 0!important}.dev-view-about{z-index:101!important}div.talk-post div.pager-holder,div.talk-post div.pager2,div.talk-post textarea{height:150px}.talk-tower div.nest{padding-left:12px!important;margin-bottom:8px!important;border-left:solid 1px transparent!important}.talk-tower div.nest:hover{border-color:#a6b2a6!important}#deviant ul.list[style^=border-top]{border:none!important;margin-top:0!important;padding-top:0!important}body.dt-hide-group-box #gruze-main #gmi-GroupMemberZone{display:none!important}#any-joinrequest-module>.gr-configform{padding-left:0!important}.submit_to_groups .second_option>textarea{margin-left:0!important}#gmi-GMRoleEditor #gmi-BPPDropDown>div[style]{padding-left:30px!important}.frame-button.submit,body.dt-hide-morelikethis .mlt-link{display:none!important}body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover){width:15px!important}body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover)>*{display:none!important}body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover){max-width:15px!important}body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover)>*{display:none!important}body.dt-collapse-sidebar td+.gruze-sidebar:not(:hover){width:15px!important}body.dt-collapse-sidebar td+.gruze-sidebar:not(:hover)>*{display:none!important}body.editmode #modalspace>.modal{width:700px!important;margin-left:-350px!important}body.editmode #modalspace>.modal #dnd_deck_container,body.editmode #modalspace>.modal #dnd_deck_picker,body.editmode #modalspace>.modal>form{width:auto!important}body.editmode #modalspace>.modal input[type=text]{width:100%!important}body.editmode #modalspace>.modal textarea.css,body.editmode #modalspace>.modal textarea.text{height:250px!important}span.shadow>a.lit,span.shadow>span.blogthumb>div{font-size:86%!important;font-family:arial,sans-serif!important}span.shadow>a.lit>q>strong{display:none!important}.gr-shoutbox div.pp>dl.shouts dd,.gr-shoutbox div.pp>dl.shouts dt{padding-left:20px!important}.gr-shoutbox div.h.p{width:auto!important;padding-right:85px!important;position:relative!important}.gr-shoutbox div.h.p dt{display:none!important}.gr-shoutbox dl.shouts .timestamp{font-size:80%!important;opacity:.7!important}.gr-shoutbox dl.shouts input[type=text]{width:100%!important}.gr-shoutbox dl.shouts input[type=submit]{position:absolute!important;right:6px!important;width:55px!important;top:5px!important}.dd-heading{margin:0!important}#deviation_critiques div.critique,div.critique_feedback{width:auto!important;margin-right:135px!important}body.dt-hide-share-buttons #gmi-ResourceViewShare{display:none!important}.ile_edit_in_muroimport{margin-top:0!important}.ile_edit_in_muroimport>span.button-title,body.dt-hide-sidebar-thumbs .deviation-mlt-preview .stream,body.dt-hide-sidebar-thumbs h3>span.tiny-avatar{display:none!important}body.dt-hide-sidebar-thumbs h3.group_featured_title,body.dt-hide-sidebar-thumbs h3.more-from-da-title{background:0 0!important;padding-left:0!important}.dev-meta-producttabs>#printtabscontainer:not(:hover) #print-button{border-radius:5px!important;border-bottom:solid 1px #9ead98}.dev-meta-producttabs>#printtabscontainer:not(:hover)>#buy-tabs{display:none!important}.print-submit-help-bubble{display:none!important}#pointsdownload_widget:not(:hover)>.pdw_details{display:none!important}#pointsdownload_widget:not(:hover) #pdw_button_download{border-radius:5px!important}div.group_featured_list{position:relative!important;padding:32px 0 0!important;min-height:35px;max-height:285px;overflow-y:auto;overflow-x:hidden}.not-in-group{text-align:center;margin-top:1em}.submit_to_groups_button{display:inline!important}.submit_to_groups_link{margin:0!important}#groups_links{position:absolute!important;top:0!important;padding:0!important}#all_groups{float:right!important;padding:4px 0 0 1em!important}.dev-metainfo-copy-control{clear:both;margin-top:0!important}.dev-metainfo-copy-control br{display:none!important}.dev-metainfo-copy-control strong{display:inline-block;min-width:96px}.dev-view-about-content{display:block!important;opacity:1!important}body.dt-hide-forum-icons #thread #reply form table table,body.dt-hide-forum-icons #thread .forum img:not([src*='/lock.']):not([src*='/sticky.']),body.dt-hide-forum-icons .mcbox-preview-forum .mcb-icon>img{display:none}#thread .forum br{display:none}#thread .forum .d-started-by a[title],#thread .forum span[title]{margin-left:10px;opacity:.5}#thread .forum .d-latest-reply,#thread .forum .d-started-by{white-space:nowrap}#thread .forum tr.thread td{padding-top:3px!important;padding-bottom:3px!important}#help-container .mglist,div[style*='rgb(222, 233, 229)']{background:0 0!important;padding:0 0 8px!important}.mglist li{padding-bottom:0!important}#messages h2.mczone-title{margin-right:0!important}#messages .mczone{border-bottom:none!important}#messages .messages-menu div.header img{display:none!important}#messages .messages-folder-zone a.maybedrop{background-position:0 -450px!important}#messages .no-folder-notice{font-size:90%!important}#messages .mczone-empty,#messages .talkmessage a.h+img,#messages .talkmessage div.h+a.h{display:none!important}.talkmessage table,.talkmessage td{width:100%!important}.talkmessage>table>*>*>td:first-child{width:0!important}div.message-simulator{padding:0!important}div.mcbox-inner-full-comment div.mcb-whoicon{top:0!important}div.mcbox-sel>div>span.mcx{top:4px!important;right:4px!important}div.mcbox-sel>div>span.mcdx{top:4px!important;right:22px!important}div.mcbox-sel-thumb>div>span.mcdx,div.mcbox-sel-thumb>div>span.mcx{margin-right:-2px!important}.talkmessage .mcb-body{width:auto!important}.talkmessage-taller{min-height:102px!important}body.dt-scroll-comments .talkmessage .mcb-body{overflow-y:auto!important}body.dt-scroll-comments.s1 .talkmessage .mcb-body{max-height:10em!important}body.dt-scroll-comments.s2 .talkmessage .mcb-body{max-height:20em!important}.mcbox-leech{margin-top:-4px!important;margin-left:0!important;border-left:none!important}.mcbox-leech.mcbox-sel{margin-left:-1px!important}.mcbox-full .mcbox-inner{margin-bottom:5px!important}.talk-post .inputs{padding:4px 0!important}.mcbox-inner-full-stack .talkmessage-comment.al{width:90%!important;min-height:0!important;padding:4px 6px!important}.mcbox-inner-full-stack a.ts-lnk{color:inherit!important}.popup2-mcbox-comment{width:500px!important;height:auto!important;min-height:150px;max-height:270px}#messages .mcb-tab{margin-top:25px!important}#deviantART-v7 #messages .mcb-tab>a{padding:0!important}#messages .mcb-tab>a>.tabtext{border-radius:0!important}#notes .left-column{width:40%!important}#notes .right-column{width:59%!important}#notes li{padding-top:3px!important;padding-bottom:3px!important}body.dt-scroll-comments #notes:not(.note-modal) .previewcontainer{height:auto!important}body.dt-scroll-comments.s1 #notes:not(.note-modal) .previewcontainer{max-height:20em!important}body.dt-scroll-comments.s2 #notes:not(.note-modal) .previewcontainer{max-height:40em!important}#solid-gone .altview+.sleekadbubble,#solid-gone .sleekadbubble+.altview,#solid-gone>img[src*=fella],#solid-gone>img[src*=fella]+div{display:none}#solid-gone div.altview{margin-left:auto!important;margin-right:auto!important}#solid-gone input[style='width: 120px']{width:180px!important}#solid-gone #forgot-container{margin-left:0;width:auto}.devianttidy-dialog{display:block!important;position:fixed!important;top:0;left:0;bottom:0;right:0;background:rgba(0,0,0,.5);z-index:200!important;padding:2em}.devianttidy-dialog>div{position:absolute;left:50%;top:50%;margin-left:-30em!important;width:60em}.devianttidy-dialog a{color:#3B5A4A!important}.devianttidy-dialog .dialog-icon{padding-right:.3em}.devianttidy-dialog .dialog-close{position:absolute;top:2px;right:6px;cursor:pointer;padding:4px}.devianttidy-dialog .dialog-close>img{margin:0}.devianttidy-dialog .dialog-body{margin:8px!important;overflow-y:auto}.devianttidy-dialog .dialog-category{margin-top:.5em;font-weight:700}.devianttidy-dialog .dialog-control{position:relative;margin-left:26px}.devianttidy-dialog .dialog-control input{position:absolute;left:-18px;margin-top:0}.devianttidy-dialog .dialog-control select{position:absolute;right:0;margin-top:-4px;border:1px solid #ccc}.devianttidy-dialog .hint{font-size:90%;color:#676}.devianttidy-dialog .dialog-buttons{margin-top:1em}.devianttidy-dialog .dialog-buttons button{margin:0 .3em}";
 
 	// Bundle up these utility methods into a single container object that can be passed to other scripts
 	var devianttidyutils = {
@@ -183,14 +192,18 @@
 		devianttidydialog: devianttidydialog
 	};
 
-
 	// The DeviantTidy application
 	var devianttidy = {
-		version: '4.7.8',
+		version: '4.7.9',
 		debug: false,
-		extension: typeof GM_isExtension !== 'undefined',
-		homepage: 'http://www.deviantart.com/deviation/45622809/',
+		homepage: 'https://www.deviantart.com/deviation/45622809/',
 		body: null,
+		
+		changelist: [
+			"Updated: DeviantTidy will look for updates using HTTPS because DA now officially supports it.",
+			"Fixed: Options link moved from the page footer to the user menu on the top navigation.",
+			"Fixed: Modal dialogs will resize if the window is resized after they're opened."
+		],
 
 		log: function(message, alertme) {
 			if (!this.debug) {return;}
@@ -201,7 +214,7 @@
 		},
 
 		preload: function() {
-			GM_addStyle(".friendmachine .controls{padding-left:5px!important}.friendmachine>.readout>dl>dd.f{line-height:18px!important}.friendmachine>.readout>dl{margin-bottom:8px!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:hover{min-width:8em!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:not(:hover){font-size:0!important;padding-right:0!important}:not(.oh-eax)>#oh-mainmenu #more7-main.dt-hide-nav-labels>a:not(:hover)>sup{display:none!important}body.dt-hide-core-ad #oh-menu-upgrade{display:none!important}#overhead-collect.dt-top-nav-fixed{position:fixed!important;z-index:151!important}#artist-comments hr,#output hr:not([class]),.previewcontainer hr,.thought .body hr{display:block!important;border:1px solid transparent!important;border-top-color:#9DB1B0!important;border-bottom-color:#E9EFE8!important}textarea{font-size:90%!important;font-family:verdana,sans-serif}.mc-ctrl,.mcb-note-box,.mcbox>.ch-ctrl,div.mcbox-inner-preview{border-radius:0!important}#output a.a,#output div.alink a{text-decoration:none!important}#output a.a:hover,#output div.alink a:hover{text-decoration:underline!important}#output a.a:visited{opacity:.7}body>div.drag-and-collect{display:none!important}.smbutton-blue:focus{outline:#000 dotted 1px!important}.bubbleview>div.policy-page,.text.text-ii,p.critique-recommendation{width:auto!important;max-width:100%!important}body.dt-limit-width{margin-left:auto!important;margin-right:auto!important}body.dt-limit-width.l1{max-width:1200px!important}body.dt-limit-width.l2{max-width:1400px!important}body.dt-limit-width.l3{max-width:1600px!important}table.zebra,table.zebra tr,table.zebra tr>*{border-collapse:collapse!important}#deviantlist td{padding:0 3px!important}#deviantlist tbody tr:hover td,#deviantlist tr.even:hover td{background:#DEE8E5}#tblGroups td.c input,#tblGroups+form td.c input{width:80px!important}.dt-floating-comment{border:1px solid rgba(255,255,255,.5);background:rgba(211,223,209,.8);z-index:101!important;display:block!important;position:fixed!important;bottom:0!important;left:0;right:0;padding:15px 20px 0!important}.dev-view-about{z-index:101!important}body .cc-avatar{margin-top:1px!important}.ccomment{margin-bottom:8px!important}.cc-signature{float:none!important;font-size:90%;overflow-y:auto!important;max-height:15em!important;padding-bottom:1px!important}body.dt-scroll-comments .ctext .text-ii{overflow-y:auto!important;padding-bottom:1px}body.dt-scroll-comments.s1 .ctext .text-ii{max-height:17em!important}body.dt-scroll-comments.s2 .ctext .text-ii{max-height:34em!important}div.talk-post div.pager-holder,div.talk-post div.pager2,div.talk-post textarea{height:150px!important}.talk-tower div.nest{padding-left:12px!important;margin-bottom:8px!important;border-left:solid 1px transparent!important}.talk-tower div.nest:hover{border-color:#a6b2a6!important}#deviant ul.list[style^=border-top]{border:none!important;margin-top:0!important;padding-top:0!important}body.dt-hide-group-box #gruze-main #gmi-GroupMemberZone{display:none!important}#any-joinrequest-module>.gr-configform{padding-left:0!important}.submit_to_groups .second_option>textarea{margin-left:0!important}#gmi-GMRoleEditor #gmi-BPPDropDown>div[style]{padding-left:30px!important}.frame-button.submit,body.dt-hide-morelikethis .mlt-link{display:none!important}body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover){width:15px!important}body.dt-collapse-sidebar #deviant td.gruze-sidebar:not(:hover)>*{display:none!important}body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover){max-width:15px!important}body.dt-collapse-sidebar #browse2:not(.shopModuleBrowse) #browse-sidebar:not(:hover)>*{display:none!important}body.dt-collapse-sidebar td+.gruze-sidebar:not(:hover){width:15px!important}body.dt-collapse-sidebar td+.gruze-sidebar:not(:hover)>*{display:none!important}body.editmode #modalspace>.modal{width:700px!important;margin-left:-350px!important}body.editmode #modalspace>.modal #dnd_deck_container,body.editmode #modalspace>.modal #dnd_deck_picker,body.editmode #modalspace>.modal>form{width:auto!important}body.editmode #modalspace>.modal input[type=text]{width:100%!important}body.editmode #modalspace>.modal textarea.css,body.editmode #modalspace>.modal textarea.text{height:250px!important}span.shadow>a.lit,span.shadow>span.blogthumb>div{font-size:86%!important;font-family:arial,sans-serif!important}span.shadow>a.lit>q>strong{display:none!important}.gr-shoutbox div.pp>dl.shouts dd,.gr-shoutbox div.pp>dl.shouts dt{padding-left:20px!important}.gr-shoutbox dl.shouts .timestamp{font-size:80%!important;opacity:.7!important}.gr-shoutbox div.h.p{width:auto!important;padding-right:85px!important;position:relative!important}.gr-shoutbox div.h.p dt{display:none!important}.gr-shoutbox dl.shouts input[type=text]{width:100%!important}.gr-shoutbox dl.shouts input[type=submit]{position:absolute!important;right:6px!important;width:55px!important;top:5px!important}.dd-heading{margin:0!important}#deviation_critiques div.critique,div.critique_feedback{width:auto!important;margin-right:135px!important}body.dt-hide-share-buttons #gmi-ResourceViewShare{display:none!important}.ile_edit_in_muroimport{margin-top:0!important}.ile_edit_in_muroimport>span.button-title,body.dt-hide-sidebar-thumbs .deviation-mlt-preview .stream,body.dt-hide-sidebar-thumbs h3>span.tiny-avatar{display:none!important}body.dt-hide-sidebar-thumbs h3.group_featured_title,body.dt-hide-sidebar-thumbs h3.more-from-da-title{background:0 0!important;padding-left:0!important}.dev-meta-producttabs>#printtabscontainer:not(:hover) #print-button{border-radius:5px!important;border-bottom:solid 1px #9ead98}.dev-meta-producttabs>#printtabscontainer:not(:hover)>#buy-tabs{display:none!important}.print-submit-help-bubble{display:none!important}#pointsdownload_widget:not(:hover)>.pdw_details{display:none!important}#pointsdownload_widget:not(:hover) #pdw_button_download{border-radius:5px!important}div.group_featured_list{position:relative!important;padding:32px 0 0!important;min-height:35px;max-height:285px;overflow-y:auto;overflow-x:hidden}.not-in-group{text-align:center;margin-top:1em}.submit_to_groups_button{display:inline!important}.submit_to_groups_link{margin:0!important}#groups_links{position:absolute!important;top:0!important;padding:0!important}#all_groups{float:right!important;padding:4px 0 0 1em!important}.dev-metainfo-copy-control{clear:both;margin-top:0!important}.dev-metainfo-copy-control br{display:none!important}.dev-metainfo-copy-control strong{display:inline-block;min-width:96px}.dev-view-about-content{display:block!important;opacity:1!important}body.dt-hide-forum-icons #thread #reply form table table,body.dt-hide-forum-icons #thread .forum img:not([src*=\"/lock.\"]):not([src*=\"/sticky.\"]),body.dt-hide-forum-icons .mcbox-preview-forum .mcb-icon>img{display:none}#thread .forum br{display:none}#thread .forum .d-started-by a[title],#thread .forum span[title]{margin-left:10px;opacity:.5}#thread .forum .d-latest-reply,#thread .forum .d-started-by{white-space:nowrap}#thread .forum tr.thread td{padding-top:3px!important;padding-bottom:3px!important}#help-container .mglist,div[style*=\"rgb(222, 233, 229)\"]{background:0 0!important;padding:0 0 8px!important}.mglist li{padding-bottom:0!important}#messages h2.mczone-title{margin-right:0!important}#messages .mczone{border-bottom:none!important}#messages .messages-menu div.header img{display:none!important}#messages .messages-folder-zone a.maybedrop{background-position:0 -450px!important}#messages .no-folder-notice{font-size:90%!important}.talkmessage table,.talkmessage td{width:100%!important}.talkmessage>table>*>*>td:first-child{width:0!important}#messages .mczone-empty,#messages .talkmessage a.h+img,#messages .talkmessage div.h+a.h{display:none!important}div.message-simulator{padding:0!important}div.mcbox-inner-full-comment div.mcb-whoicon{top:0!important}div.mcbox-sel>div>span.mcx{top:4px!important;right:4px!important}div.mcbox-sel>div>span.mcdx{top:4px!important;right:22px!important}div.mcbox-sel-thumb>div>span.mcdx,div.mcbox-sel-thumb>div>span.mcx{margin-right:-2px!important}.talkmessage .mcb-body{width:auto!important}.talkmessage-taller{min-height:102px!important}body.dt-scroll-comments .talkmessage .mcb-body{overflow-y:auto!important}body.dt-scroll-comments.s1 .talkmessage .mcb-body{max-height:10em!important}body.dt-scroll-comments.s2 .talkmessage .mcb-body{max-height:20em!important}.mcbox-leech{margin-top:-4px!important;margin-left:0!important;border-left:none!important}.mcbox-leech.mcbox-sel{margin-left:-1px!important}.mcbox-full .mcbox-inner{margin-bottom:5px!important}.talk-post .inputs{padding:4px 0!important}.mcbox-inner-full-stack .talkmessage-comment.al{width:90%!important;min-height:0!important;padding:4px 6px!important}.mcbox-inner-full-stack a.ts-lnk{color:inherit!important}.popup2-mcbox-comment{width:500px!important;height:auto!important;min-height:150px;max-height:270px}#messages .mcb-tab{margin-top:25px!important}#deviantART-v7 #messages .mcb-tab>a{padding:0!important}#messages .mcb-tab>a>.tabtext{border-radius:0!important}#notes .left-column{width:40%!important}#notes .right-column{width:59%!important}#notes li{padding-top:3px!important;padding-bottom:3px!important}body.dt-scroll-comments #notes:not(.note-modal) .previewcontainer{height:auto!important}body.dt-scroll-comments.s1 #notes:not(.note-modal) .previewcontainer{max-height:20em!important}body.dt-scroll-comments.s2 #notes:not(.note-modal) .previewcontainer{max-height:40em!important}#notes input.text.f[type=text][id][maxlength]{padding:2px!important}#solid-gone .altview+.sleekadbubble,#solid-gone .sleekadbubble+.altview,#solid-gone>img[src*=fella],#solid-gone>img[src*=fella]+div{display:none}#solid-gone div.altview{margin-left:auto!important;margin-right:auto!important}#solid-gone input[style=\"width: 120px\"]{width:180px!important}.devianttidy-dialog{display:block!important;position:fixed!important;top:0;left:0;bottom:0;right:0;background:rgba(0,0,0,.5);z-index:200!important;padding:2em}.devianttidy-dialog>div{position:absolute;left:50%;top:50%;margin-left:-30em!important;width:60em}.devianttidy-dialog a{color:#3B5A4A!important}.devianttidy-dialog .dialog-icon{padding-right:.3em}.devianttidy-dialog .dialog-close{position:absolute;top:8px;right:6px;cursor:pointer;padding:4px}.devianttidy-dialog .dialog-body{margin:8px!important;overflow-y:auto}.devianttidy-dialog .dialog-category{margin-top:.5em;font-weight:700}.devianttidy-dialog .dialog-control{position:relative;margin-left:26px}.devianttidy-dialog .dialog-control input{position:absolute;left:-18px;margin-top:0}.devianttidy-dialog .dialog-control select{position:absolute;right:0;margin-top:-4px;border:1px solid #ccc}.devianttidy-dialog .hint{font-size:90%;color:#676}.devianttidy-dialog .dialog-buttons{margin-top:1em}.devianttidy-dialog .dialog-buttons button{min-width:8em;margin:0 .2em}");
+			GM_addStyle(devianttidycss);
 		},
 
 		start: function() {
@@ -209,6 +222,10 @@
 				return;
 			}
 
+			// Add the CSS again as a workaround for Firefox 55.
+			// Internal changes may have broken GM_addStyle during preload.
+			GM_addStyle(devianttidycss);
+			
 			this.body = $('body')[0];
 
 			if (!Function.prototype.bind) {
@@ -226,23 +243,17 @@
 			if (GM_getValue('version') !== this.version) {
 				GM_setValue('version', this.version);
 
-				var changes = [
-					"Fixed: updated the way dynamic deviation pages are detected, so keyboard browsing doesn't override deviation skipping.",
-					"Fixed: keyboard navigation should work consistently on Firefox and Chrome.",
-					"Added: reintroduced the feature that keeps the description and comments visible while playing Films."
-				];
-
 				devianttidydialog.open('DeviantTidy ' + this.version + ' Installed', [
 					$E('div', {className: 'pp'}, [
-						"You can view all available options by clicking 'DeviantTidy' on the footer of any DeviantArt page, or ",
-						$E('a', {href: "#", className: 'a', events: {click: devianttidy.preferences}}, ["set your preferences right away"]),
+						"You can view all available options by clicking 'DeviantTidy Options' under the user menu on the header navigation. ",
+						$E('a', {href: "#", className: 'a', events: {click: devianttidy.preferences}}, ["Configure DeviantTidy right now"]),
 						"."
 					]),
 					$E('hr'),
-					$E('div', {className: 'pp'}, changes.map(function(c){return $E('div', [c]);})),
+					$E('div', {className: 'pp'}, this.changelist.map(function(c){return $E('div', [c]);})),
 					$E('hr'),
 					$E('div', {className: 'pp'}, ["You will not see this message again.	 Close this panel to continue browsing."]),
-					$E('div', {className: 'pp c'}, [$E('button', {events: {'click': function() {devianttidydialog.close();}}}, ["Cheers!"])])
+					$E('div', {className: 'pp c'}, [makeButton("Cheers!", true, function() {devianttidydialog.close();})])
 				]);
 			}
 
@@ -261,11 +272,15 @@
 			// Add Greasemonkey menu item
 			GM_registerMenuCommand("DeviantTidy Options", this.preferences);
 
-			// Add the Options link to the page footer
-			var depths = $('#depths div.footer_tx_links')[0];
-			if (depths) {
-				depths.insertBefore($E('a', {id: 'devianttidy-options-link', href: '#', events: {click: this.preferences}}, ['DeviantTidy']), depths.childNodes[0]);
-			}
+			// Add the Options link to the header nav
+			$('#oh-menu-deviant li.oh-menu-list-item .i8').closest('li').after(
+				$E('li', {className: 'oh-menu-list-item'}, [
+					$E('a', {id: 'devianttidy-options-link', className: 'mi iconset-messages', href: '#', events: {click: this.preferences}}, [
+						$E('i', {className: 'i8'}),
+						'DeviantTidy Options'
+					])
+				])
+			);
 		},
 
 		preferences: function() {
@@ -316,17 +331,17 @@
 				}
 			}
 
-			devianttidydialog.open("Options", [
+			devianttidydialog.open("DeviantTidy Options", [
 				$E('div', {className: 'p r'}, [
 					$E('a', {href: devianttidy.homepage}, ["DeviantTidy"]),
-					" for " + (devianttidy.extension ? "Firefox" : "Greasemonkey") + "; version " + devianttidy.version + ". ",
-					$E('a', {href: "#", events: {'click': function() {devianttidy.update();}}}, ["Look for updates"])
+					" version " + devianttidy.version + ". ",
+					$E('a', {href: "#", events: {click: function() {devianttidy.update();}}}, ["Check for updates"])
 				]),
 				$E('div', {className: 'p'}, controls),
 				$E('div', {className: 'dialog-buttons c'}, [
-					$E('button', {events: {'click': function() {devianttidy.save();devianttidy.reload();}}}, ['Save']),
-					$E('button', {events: {'click': function() {devianttidy.reset();}}}, ['Reset']),
-					$E('button', {events: {'click': function() {devianttidydialog.close();}}}, ['Cancel'])
+					makeButton("Save & Reload", true, function() {devianttidy.save(); devianttidy.reload();}),
+					makeButton("Reset", false, function() {devianttidy.reset();}),
+					makeButton("Cancel", false, function() {devianttidydialog.close();})
 				])
 			]);
 
@@ -346,7 +361,7 @@
 		},
 
 		reset: function() {
-			if (confirm("This will reset all DeviantTidy options to their default values.")) {
+			if (confirm("This will reset all DeviantTidy options to their default values, and then reload the page.")) {
 				for (var o in this.options) {
 					this.options[o].pref = this.options[o].initial;
 				}
@@ -391,7 +406,7 @@
 				this.log("Dispatched " + dispatch_count + " function(s) in " + elapsed + "ms.\n" + dispatch_log.join("\n"));
 
 				if (dispatch_fails > 0) {
-					this.log(dispatch_fails + " dispatch method(s) failed.	Check the Error Console for details.", true);
+					this.log(dispatch_fails + " dispatch method(s) failed. Check the Error Console for details.", true);
 				}
 			}
 		},
@@ -406,7 +421,7 @@
 			GM_setValue('last_updated', new Date().toString());
 
 			if (!quiet) {
-				devianttidydialog.open('Looking for Updates...', "Checking for a new version of DeviantTidy.  Please wait...");
+				devianttidydialog.open('Looking for Updates...', "Checking for a new version of DeviantTidy. Please wait...");
 			}
 
 			var update_error = function(jqXHR, message) {
@@ -441,13 +456,8 @@
 				}
 				else {
 					message = [$E('b', ["DeviantTidy " + version_number + " is available. "])];
-					if (devianttidy.extension) {
-						message.push("Open your Firefox Add-Ons window and click 'Check For Updates'.");
-					}
-					else {
-						message.push($E('a', {href: devianttidy.homepage}, ["Go to the DeviantTidy homepage"]));
-						message.push(" to update your style and script.");
-					}
+					message.push($E('a', {href: devianttidy.homepage}, ["Go to the DeviantTidy homepage"]));
+					message.push(" to update your style and script.");
 				}
 				devianttidydialog.open('Update Status', [$E('div', {className: 'ppp c'}, message)]);
 			};
@@ -465,12 +475,12 @@
 
 		extend: function(object) {
 			// Use this function to add your own options to DeviantTidy.
-			// Review the example add-on which comes with the Firefox extension for documentation.
+			// Review the example add-on in the project source for documentation.
 			if (typeof object.name !== 'string' || typeof object.method !== 'function' || typeof object.description !== 'string') {
 				this.log("Attempt to extend with a malformed add-on");
 				this.log(object);
 				alert("DeviantTidy doesn't like the structure of the option you tried to add.\n" +
-					  "Please check that you set the required parameters and that their types are correct.");
+					"Please check that you set the required parameters and that their types are correct.");
 				return;
 			}
 			else if (this.options[object.name]) {
@@ -753,7 +763,7 @@
 						href: '#',
 						style: {display: 'none'},
 						accessKey: "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split('')[pref],
-						events: {'click': comment_toggle}
+						events: {click: comment_toggle}
 					}));
 
 					return 1;
@@ -789,7 +799,7 @@
 							// exactly equal to the current search criteria.
 							if (target.name !== 'q') {return;}
 							var urldecode = function(str) {
-							   return decodeURIComponent((str+'').replace(/\+/g, '%20'));
+								return decodeURIComponent((str+'').replace(/\+/g, '%20'));
 							};
 							if (target.value && !urldecode(location.href).match('q=' + target.value + "($|&)")) {return;}
 						}
